@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tiempo de Vida en Tiempo Real - Nayheli (11 Años)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Cinzel:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    body { margin: 0; background-color: #09090b; color: #fff; font-family: "Montserrat", sans-serif; overflow-x: hidden; }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(236, 72, 153, 0.4); }
+      50% { box-shadow: 0 0 35px rgba(244, 114, 182, 0.8); }
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
+    }
+    .glow-box { animation: pulseGlow 3s infinite ease-in-out; }
+    .floating-img { animation: floatSlow 4s ease-in-out infinite; }
+    .hashira-card {
+      position: relative;
+      width: min(230px, 80vw);
+      height: min(330px, 115vw);
+      transition: all 0.5s ease;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .hashira-card img:first-child {
+      border-radius: 16px;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+      transition: all 0.5s ease;
+    }
+    .hashira-card img:last-child {
+      position: absolute;
+      width: min(190px, 65vw);
+      bottom: 35px;
+      left: 0;
+      right: 0;
+      margin: auto;
+      transform: translateY(25%) scale(0.9);
+      transition: all 0.5s ease;
+      opacity: 0;
+      pointer-events: none;
+      filter: drop-shadow(0 10px 25px rgba(236, 72, 153, 0.8));
+    }
+    .hashira-card:hover, .hashira-card:active {
+      transform: perspective(250px) rotateX(10deg) translateY(-8%) translateZ(0);
+    }
+    .hashira-card:hover img:first-child, .hashira-card:active img:first-child {
+      box-shadow: 0 25px 45px rgba(236, 72, 153, 0.7);
+    }
+    .hashira-card:hover img:last-child, .hashira-card:active img:last-child {
+      opacity: 1;
+      transform: translateY(6%) scale(1.1);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen relative overflow-x-hidden">
+
+  <!-- CANCIÓN DE FONDO -->
+  <audio id="bg-music" src="cancion_principal.mp3" loop autoplay></audio>
+
+  <!-- FONDO COLLAGE LATERAL EN .JPG / .PNG -->
+  <div class="fixed inset-0 pointer-events-none z-0 opacity-15 overflow-hidden hidden md:flex justify-between px-2 sm:px-6">
+    <div class="flex flex-col gap-6 w-28 sm:w-36 -mt-10 blur-[1px]">
+      <img src="https://lh3.googleusercontent.com/d/1aIuJPi9-HTD0ivEsMW1YKmkS5aR-LkXL" class="rounded-2xl shadow-xl transform -rotate-6" alt="Fondo Nezuko 1" />
+      <img src="https://lh3.googleusercontent.com/d/10LejHl21yLFW7IlGlt_BWB-c0w43-UxG" class="rounded-2xl shadow-xl transform rotate-3" alt="Fondo Nezuko 3" />
+    </div>
+    <div class="flex flex-col gap-6 w-28 sm:w-36 -mt-10 blur-[1px]">
+      <img src="https://lh3.googleusercontent.com/d/1kKQAYTf3TaFGd7GRdAw172uBheQZne0j" class="rounded-2xl shadow-xl transform rotate-6" alt="Fondo Nezuko 2" />
+      <img src="https://lh3.googleusercontent.com/d/1aIuJPi9-HTD0ivEsMW1YKmkS5aR-LkXL" class="rounded-2xl shadow-xl transform -rotate-3" alt="Fondo Nezuko 1" />
+    </div>
+  </div>
+
+  <canvas id="canvas-fx" class="fixed inset-0 pointer-events-none z-50"></canvas>
+
+  <div class="max-w-5xl mx-auto px-3 sm:px-4 py-6 sm:py-8 relative z-10">
+
+    <!-- NAVEGACIÓN SUPERIOR -->
+    <div class="flex flex-wrap items-center justify-center sm:justify-between gap-2.5 mb-6 sm:mb-8">
+      <a href="torta_nezuko_s.html" class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-slate-900 border border-pink-500/40 text-pink-300 text-[11px] sm:text-xs font-bold hover:bg-slate-800 transition-all flex items-center gap-1.5">
+        <span class="hidden sm:inline">⬅️ Anterior: Torta 🎂</span>
+        <span class="sm:hidden">⬅️ Torta 🎂</span>
+      </a>
+      <a href="index.html" class="px-2.5 py-1.5 rounded-lg bg-pink-950 border border-pink-500/40 text-pink-300 text-[11px] sm:text-xs font-bold">
+        🏠 Menú
+      </a>
+      <a href="escuadron_t.html" class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-pink-500 text-slate-950 text-[11px] sm:text-xs font-bold hover:bg-pink-400 transition-all flex items-center gap-1.5">
+        <span class="hidden sm:inline">Siguiente: Tus Personajes ⚔️ ➡️</span>
+        <span class="sm:hidden">Personajes ⚔️ ➡️</span>
+      </a>
+    </div>
+
+    <header class="text-center mb-8 sm:mb-10">
+      <h1 class="text-2xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 mb-3">
+        ⏳ Tiempo de Vida de Nayheli
+      </h1>
+      <p class="text-slate-300 text-xs sm:text-base max-w-2xl mx-auto px-2">
+        Contando cada segundo de alegría, magia y aventuras desde su nacimiento (27 de Septiembre de 2015).
+      </p>
+    </header>
+
+    <!-- GALERÍA DE TARJETAS 3D CAMBIANTES DE NEZUKO 1, 2 Y 3 -->
+    <section class="mb-10 sm:mb-12 text-center">
+      <h2 class="text-xl sm:text-2xl font-bold text-pink-300 mb-2">🌸 Galería 3D de Nezuko</h2>
+      <p class="text-xs text-slate-400 mb-6 px-2">Pasa el cursor o toca la tarjeta para ver cómo cambia la animación 3D de Nezuko</p>
+      
+      <div class="flex flex-wrap justify-center gap-6 sm:gap-8">
+        <!-- Tarjeta 1: nezuko1 -> nezuko2 -->
+        <div class="flex flex-col items-center max-w-xs">
+          <div class="hashira-card mb-3">
+            <img src="https://lh3.googleusercontent.com/d/1aIuJPi9-HTD0ivEsMW1YKmkS5aR-LkXL" alt="Nezuko 1 Fondo" />
+            <img src="https://lh3.googleusercontent.com/d/1kKQAYTf3TaFGd7GRdAw172uBheQZne0j" alt="Nezuko 2 Overlay" />
+          </div>
+          <div class="bg-pink-950/40 border border-pink-500/40 p-3 sm:p-3.5 rounded-2xl text-pink-200 text-xs text-center shadow-lg w-full max-w-[240px]">
+            🌸 <strong>Nezuko Guardiana:</strong> Pasa el cursor para ver a Nezuko dulzura emerger en 3D
+          </div>
+        </div>
+
+        <!-- Tarjeta 2: nezuko1 -> nezuko3 -->
+        <div class="flex flex-col items-center max-w-xs">
+          <div class="hashira-card mb-3">
+            <img src="https://lh3.googleusercontent.com/d/1aIuJPi9-HTD0ivEsMW1YKmkS5aR-LkXL" alt="Nezuko 1 Fondo" />
+            <img src="https://lh3.googleusercontent.com/d/10LejHl21yLFW7IlGlt_BWB-c0w43-UxG" alt="Nezuko 3 Overlay" />
+          </div>
+          <div class="bg-rose-950/40 border border-rose-500/40 p-3 sm:p-3.5 rounded-2xl text-rose-200 text-xs text-center shadow-lg w-full max-w-[240px]">
+            ✨ <strong>Fuerza de Bambú:</strong> Pasa el cursor para ver la pose especial de Nezuko
+          </div>
+        </div>
+
+        <!-- Tarjeta 3: nezuko1 -> nezuko2 -->
+        <div class="flex flex-col items-center max-w-xs">
+          <div class="hashira-card mb-3">
+            <img src="https://lh3.googleusercontent.com/d/1aIuJPi9-HTD0ivEsMW1YKmkS5aR-LkXL" alt="Nezuko 1 Fondo" />
+            <img src="https://lh3.googleusercontent.com/d/1kKQAYTf3TaFGd7GRdAw172uBheQZne0j" alt="Nezuko 2 Overlay" />
+          </div>
+          <div class="bg-purple-950/40 border border-purple-500/40 p-3 sm:p-3.5 rounded-2xl text-purple-200 text-xs text-center shadow-lg w-full max-w-[240px]">
+            🎀 <strong>Energía Mágica:</strong> El poder del amor protegiendo los 11 Años de Nayheli
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RELOJ DE TIEMPO DE VIDA EN TIEMPO REAL -->
+    <section class="bg-gradient-to-b from-slate-900/95 to-pink-950/40 border-2 border-pink-500/50 rounded-3xl p-4 sm:p-10 shadow-2xl backdrop-blur-md mb-10 sm:mb-12 relative overflow-hidden text-center">
+      <div class="absolute -top-10 -right-10 w-40 h-40 bg-pink-500/20 rounded-full blur-3xl pointer-events-none"></div>
+      
+      <h2 class="text-xl sm:text-3xl font-extrabold text-pink-300 mb-2 font-serif">
+        ⏰ Tu Reloj de Vida en Vivo
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-300 mb-6 sm:mb-8">
+        Nacida el <strong class="text-amber-300">27 de Septiembre de 2015</strong> • ¡Contador actualizado segundo a segundo!
+      </p>
+
+      <!-- RECUADROS DE TIEMPO: FILA 1 (Años, Meses, Días) Y FILA 2 (Horas, Minutos, Segundos) TANTO PARA PC COMO PARA CELULAR -->
+      <div class="grid grid-cols-3 gap-2 sm:gap-4 mb-6 sm:mb-8">
+        <!-- Fila 1: Años -->
+        <div class="bg-black/70 border border-pink-500/50 rounded-2xl p-2 sm:p-4 shadow-inner flex flex-col items-center">
+          <span id="years" class="text-2xl sm:text-4xl lg:text-5xl font-black text-pink-400 tracking-wider">11</span>
+          <span class="text-[9px] sm:text-xs font-bold text-slate-300 uppercase tracking-widest mt-1">Años</span>
+        </div>
+        <!-- Fila 1: Meses -->
+        <div class="bg-black/70 border border-pink-500/50 rounded-2xl p-2 sm:p-4 shadow-inner flex flex-col items-center">
+          <span id="months" class="text-2xl sm:text-4xl lg:text-5xl font-black text-rose-300 tracking-wider">00</span>
+          <span class="text-[9px] sm:text-xs font-bold text-slate-300 uppercase tracking-widest mt-1">Meses</span>
+        </div>
+        <!-- Fila 1: Días -->
+        <div class="bg-black/70 border border-pink-500/50 rounded-2xl p-2 sm:p-4 shadow-inner flex flex-col items-center">
+          <span id="days" class="text-2xl sm:text-4xl lg:text-5xl font-black text-emerald-300 tracking-wider">00</span>
+          <span class="text-[9px] sm:text-xs font-bold text-slate-300 uppercase tracking-widest mt-1">Días</span>
+        </div>
+        <!-- Fila 2: Horas -->
+        <div class="bg-black/70 border border-pink-500/50 rounded-2xl p-2 sm:p-4 shadow-inner flex flex-col items-center">
+          <span id="hours" class="text-2xl sm:text-4xl lg:text-5xl font-black text-amber-300 tracking-wider">00</span>
+          <span class="text-[9px] sm:text-xs font-bold text-slate-300 uppercase tracking-widest mt-1">Horas</span>
+        </div>
+        <!-- Fila 2: Minutos -->
+        <div class="bg-black/70 border border-pink-500/50 rounded-2xl p-2 sm:p-4 shadow-inner flex flex-col items-center">
+          <span id="minutes" class="text-2xl sm:text-4xl lg:text-5xl font-black text-sky-300 tracking-wider">00</span>
+          <span class="text-[9px] sm:text-xs font-bold text-slate-300 uppercase tracking-widest mt-1">Minutos</span>
+        </div>
+        <!-- Fila 2: Segundos -->
+        <div class="bg-black/70 border-2 border-pink-400 rounded-2xl p-2 sm:p-4 shadow-inner flex flex-col items-center glow-box">
+          <span id="seconds" class="text-2xl sm:text-4xl lg:text-5xl font-black text-purple-300 tracking-wider">00</span>
+          <span class="text-[9px] sm:text-xs font-bold text-slate-300 uppercase tracking-widest mt-1">Segundos</span>
+        </div>
+      </div>
+
+      <!-- DATOS CURIOSOS ACUMULADOS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-w-2xl mx-auto">
+        <div class="bg-slate-900/80 border border-pink-500/30 p-3 sm:p-4 rounded-2xl text-slate-200 text-xs sm:text-sm">
+          🌟 Total Días de Vida: <strong id="total-days" class="text-pink-300 text-sm sm:text-base font-extrabold">0</strong> días llenos de amor
+        </div>
+        <div class="bg-slate-900/80 border border-pink-500/30 p-3 sm:p-4 rounded-2xl text-slate-200 text-xs sm:text-sm">
+          ⚡ Total Segundos Transcurridos: <strong id="total-seconds" class="text-emerald-300 text-sm sm:text-base font-extrabold">0</strong> s
+        </div>
+      </div>
+    </section>
+
+    <!-- NAVEGACIÓN INFERIOR -->
+    <div class="flex flex-wrap items-center justify-center sm:justify-between gap-3 border-t border-slate-800 pt-6">
+      <a href="torta_nezuko_s.html" class="px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl bg-slate-900 border border-slate-700 text-slate-300 text-xs sm:text-sm font-bold hover:bg-slate-800 transition-all">
+        ⬅️ Anterior: Torta 🎂
+      </a>
+      <a href="escuadron_t.html" class="px-4 py-2.5 sm:px-6 sm:py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-slate-950 text-xs sm:text-sm font-black hover:scale-105 transition-all">
+        Siguiente: Tus Personajes ⚔️ ➡️
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    // Fecha de nacimiento: 27 de Septiembre de 2015 a las 00:00:00
+    const birthDate = new Date(2015, 8, 27, 0, 0, 0);
+
+    function updateCounter() {
+      const now = new Date();
+      let years = now.getFullYear() - birthDate.getFullYear();
+      let months = now.getMonth() - birthDate.getMonth();
+      let days = now.getDate() - birthDate.getDate();
+      let hours = now.getHours() - birthDate.getHours();
+      let minutes = now.getMinutes() - birthDate.getMinutes();
+      let seconds = now.getSeconds() - birthDate.getSeconds();
+
+      if (seconds < 0) {
+        seconds += 60;
+        minutes--;
+      }
+      if (minutes < 0) {
+        minutes += 60;
+        hours--;
+      }
+      if (hours < 0) {
+        hours += 24;
+        days--;
+      }
+      if (days < 0) {
+        const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+        days += prevMonth.getDate();
+        months--;
+      }
+      if (months < 0) {
+        months += 12;
+        years--;
+      }
+
+      const diffMs = now - birthDate;
+      const totalDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      const totalSeconds = Math.floor(diffMs / 1000);
+
+      document.getElementById('years').textContent = String(years).padStart(2, '0');
+      document.getElementById('months').textContent = String(months).padStart(2, '0');
+      document.getElementById('days').textContent = String(days).padStart(2, '0');
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+      document.getElementById('total-days').textContent = totalDays.toLocaleString('es-ES');
+      document.getElementById('total-seconds').textContent = totalSeconds.toLocaleString('es-ES');
+    }
+
+    setInterval(updateCounter, 1000);
+    updateCounter();
+
+    // EFECTOS VISUALES CANVAS (PARTÍCULAS FLOTANTES DE SAKURA)
+    const canvas = document.getElementById('canvas-fx'); const ctx = canvas.getContext('2d');
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+    const particles = []; const colors = ['#f472b6', '#fb7185', '#34d399', '#38bdf8', '#fbbf24'];
+    class Particle {
+      constructor() { this.reset(); }
+      reset() { this.x = Math.random() * canvas.width; this.y = -20; this.size = Math.random() * 8 + 4; this.speedY = Math.random() * 2 + 1; this.speedX = Math.sin(this.y * 0.05) * 1.5; this.color = colors[Math.floor(Math.random() * colors.length)]; this.rotation = Math.random() * 360; this.rotSpeed = (Math.random() - 0.5) * 4; }
+      update() { this.y += this.speedY; this.x += Math.sin(this.y * 0.02); this.rotation += this.rotSpeed; if (this.y > canvas.height + 20) this.reset(); }
+      draw() { ctx.save(); ctx.translate(this.x, this.y); ctx.rotate((this.rotation * Math.PI) / 180); ctx.fillStyle = this.color; ctx.beginPath(); ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
+    }
+    for (let i = 0; i < 40; i++) { const p = new Particle(); p.y = Math.random() * canvas.height; particles.push(p); }
+    function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+    animate();
+  </script>
+</body>
+</html>

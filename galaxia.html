@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Galaxia del Universo Demon Slayer - Nayheli 11 Años</title>
+  <meta name="description" content="Una galaxia interactiva en 3D llena de estrellas de Kimetsu no Yaiba para Nayheli.">
+  <meta name="theme-color" content="#120618">
+
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    .top-nav-bar {
+      position: fixed;
+      top: 12px;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 12px;
+      pointer-events: auto;
+      gap: 6px;
+    }
+    .bottom-nav-bar {
+      position: fixed;
+      bottom: 12px;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 12px;
+      pointer-events: auto;
+      gap: 6px;
+    }
+    .char-badge-list {
+      position: fixed;
+      bottom: 56px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 90;
+      display: flex;
+      gap: 6px;
+      max-width: 95vw;
+      overflow-x: auto;
+      padding: 6px 12px;
+      background: rgba(15, 10, 25, 0.88);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      border-radius: 9999px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .char-badge-list::-webkit-scrollbar { display: none; }
+    .char-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #a855f7;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+    @media (min-width: 640px) {
+      .top-nav-bar { top: 16px; padding: 0 20px; }
+      .bottom-nav-bar { bottom: 20px; padding: 0 20px; }
+      .char-badge-list { bottom: 70px; gap: 8px; padding: 8px 14px; }
+      .char-avatar { width: 42px; height: 42px; }
+    }
+    .char-avatar:hover, .char-avatar:active {
+      transform: scale(1.25);
+      border-color: #ec4899;
+      box-shadow: 0 0 15px rgba(236, 72, 153, 0.8);
+    }
+    
+    @keyframes pulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 15px rgba(168,85,247,0.7)); }
+      50% { filter: drop-shadow(0 0 30px rgba(236,72,153,0.9)); }
+    }
+    .png-glow {
+      animation: pulseGlow 3s infinite ease-in-out;
+    }
+    .hashira-card-modal {
+      position: relative; width: min(210px, 60vw); height: min(300px, 85vw); transition: all 0.5s ease; cursor: pointer; display: inline-block;
+    }
+    .hashira-card-modal img:first-child { border-radius: 16px; object-fit: cover; width: 100%; height: 100%; box-shadow: 0 15px 30px rgba(168, 85, 247, 0.4); }
+    .hashira-card-modal img:last-child {
+      position: absolute; width: min(175px, 50vw); bottom: 25px; left: 0; right: 0; margin: auto; transform: translateY(25%); transition: all 0.5s ease; opacity: 0; pointer-events: none;
+      filter: drop-shadow(0 10px 20px rgba(236, 72, 153, 0.8));
+    }
+    .hashira-card-modal:hover { transform: perspective(250px) rotateX(10deg) translateY(-6%) translateZ(0); }
+    .hashira-card-modal:hover img:last-child { opacity: 1; transform: translateY(8%); }
+  </style>
+</head>
+<body class="min-h-screen app-loading bg-black text-white font-sans overflow-hidden">
+
+  <!-- AUDIO CANCIÓN UNIVERSO -->
+  <audio id="bgMusic" src="cancion_universo.mp3" loop autoplay></audio>
+
+  <!-- NAVEGACIÓN SUPERIOR -->
+  <div class="top-nav-bar">
+    <a href="index.html" class="px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-slate-900/90 border border-purple-500/50 text-purple-300 text-[11px] sm:text-xs font-bold hover:bg-slate-800 backdrop-blur-md flex items-center gap-1.5 shadow-lg">
+      <span class="hidden sm:inline">🏠 Menú Principal</span>
+      <span class="sm:hidden">🏠 Menú</span>
+    </a>
+    <div class="hidden sm:block text-xs text-purple-300 font-bold bg-slate-900/80 px-4 py-2 rounded-full border border-purple-500/40 backdrop-blur-md shadow-md">
+      🌌 Universo Demon Slayer (11 Años • 27 de Septiembre)
+    </div>
+    <a href="final.html" class="px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-slate-950 text-[11px] sm:text-xs font-bold hover:scale-105 transition-all shadow-lg">
+      <span class="hidden sm:inline">Siguiente: Créditos 🎬 ➡️</span>
+      <span class="sm:hidden">Créditos 🎬 ➡️</span>
+    </a>
+  </div>
+
+  <!-- NAVEGACIÓN INFERIOR DE PERSONAJES (AVATARES .JPG -> MUESTRAN .PNG) -->
+  <div class="char-badge-list">
+    <img src="https://lh3.googleusercontent.com/d/1aIuJPi9-HTD0ivEsMW1YKmkS5aR-LkXL" title="Nezuko" onclick="showCharMsg('🌸 Nezuko Kamado', '¡Mmmm-mmmm! 🌸 Nezuko te envía un abrazo cósmico gigante lleno de amor y dulzura por tus 11 años, Nayheli!', 'https://lh3.googleusercontent.com/d/1kKQAYTf3TaFGd7GRdAw172uBheQZne0j', 'https://lh3.googleusercontent.com/d/1aIuJPi9-HTD0ivEsMW1YKmkS5aR-LkXL')" class="char-avatar" />
+    <img src="https://lh3.googleusercontent.com/d/1loWgD3S2sKaOaUWAv9DNJrN9ARNwgtxz" title="Tanjiro" onclick="showCharMsg('🌊 Tanjiro Kamado', '🌊 ¡Tanjiro te promete proteger tu sonrisa con toda la determinación, aliento de agua y bondad del universo!', 'https://lh3.googleusercontent.com/d/1x5o3MJa7ZfA3gLoBmF9edegAD6gi_08W', 'https://lh3.googleusercontent.com/d/1loWgD3S2sKaOaUWAv9DNJrN9ARNwgtxz')" class="char-avatar" />
+    <img src="https://lh3.googleusercontent.com/d/1l0-WUevVv1TGsJKKeFsjTFiXki3YjS_e" title="Zenitsu" onclick="showCharMsg('⚡ Zenitsu Agatsuma', '⚡ ¡AAAAH! ¡Zenitsu grita a la velocidad del rayo en todas las galaxias que Nayheli es la cumpleañera más linda de todas!', 'https://lh3.googleusercontent.com/d/1ySzACxbZPYilH350sFEQT00nP1JHB1Vv', 'https://lh3.googleusercontent.com/d/1l0-WUevVv1TGsJKKeFsjTFiXki3YjS_e')" class="char-avatar" />
+    <img src="https://lh3.googleusercontent.com/d/13ff8imkrx0b-xCHM-6Ep7jACf9GHr_bm" title="Inosuke" onclick="showCharMsg('🐗 Inosuke Hashibira', '🐗 ¡JAJAJA! ¡El gran Inosuke-sama declara que Nayheli es la jefa conquistadora de todo el cosmos!', 'https://lh3.googleusercontent.com/d/1MwSDJsiNgRf6_lWmdDfWz7lUp5XXpqhg', 'https://lh3.googleusercontent.com/d/13ff8imkrx0b-xCHM-6Ep7jACf9GHr_bm')" class="char-avatar" />
+    <img src="https://lh3.googleusercontent.com/d/1FA9mZOOEJQTGQfhy-kTJEqastAs7j5Wq" title="Rengoku" onclick="showCharMsg('🔥 Rengoku Kyojuro', '🔥 ¡UMAI! ¡Rengoku exclama: MANTÉN TU CORAZÓN ARDIENTE COMO LAS ESTRELLAS DEL UNIVERSO, NAYHELI!', 'https://lh3.googleusercontent.com/d/1loWgD3S2sKaOaUWAv9DNJrN9ARNwgtxz', 'https://lh3.googleusercontent.com/d/1FA9mZOOEJQTGQfhy-kTJEqastAs7j5Wq')" class="char-avatar" />
+    <img src="https://lh3.googleusercontent.com/d/1_5XoYHl1ILK5xt9tRBBr_CFtMDBZAVk5" title="Giyu" onclick="showCharMsg('🌊 Giyu Tomioka', '🌊 Giyu contempla la calma del espacio y te confía la serenidad de las mareas cósmicas para tus 11 años.', 'https://lh3.googleusercontent.com/d/1t7GUrVPNzC7q26IxZVYOoc2IrOu72ngR', 'https://lh3.googleusercontent.com/d/1_5XoYHl1ILK5xt9tRBBr_CFtMDBZAVk5')" class="char-avatar" />
+    <img src="https://lh3.googleusercontent.com/d/1d-AHwC5p8dAoxgYMIOP2Jfdnz6aY8HJi" title="Shinobu" onclick="showCharMsg('🦋 Shinobu Kocho', '🦋 Shinobu envía una constelación de mariposas brillantes para iluminar cada día de tus 11 años.', 'https://lh3.googleusercontent.com/d/1LiJvhDtoqAoEadKc2IheUK9aEk9ytiPT', 'https://lh3.googleusercontent.com/d/1d-AHwC5p8dAoxgYMIOP2Jfdnz6aY8HJi')" class="char-avatar" />
+    <img src="https://lh3.googleusercontent.com/d/1c8GiqLzzjanLBz0yMOhgYZNPOgREoP3J" title="Mitsuri" onclick="showCharMsg('💖 Mitsuri Kanroji', '💖 ¡Mitsuri se emociona hasta las lágrimas: Eres tan dulce, fuerte y radiante como todo el universo, Nayheli!', 'https://lh3.googleusercontent.com/d/1u8w6V3yZ6YanIh3TBg5iGNnJCbnEoc5G', 'https://lh3.googleusercontent.com/d/1c8GiqLzzjanLBz0yMOhgYZNPOgREoP3J')" class="char-avatar" />
+    <img src="https://lh3.googleusercontent.com/d/1Ys60axoitMaXhle1rZB_sGF4diL6rpbN" title="Tokito" onclick="showCharMsg('🌫️ Muichiro Tokito', '🌫️ Muichiro miró a las nubes de la Vía Láctea y recordó enviarte el saludo más mágico en tu cumpleaños 11.', 'https://lh3.googleusercontent.com/d/1bFO8SqPKQQ80lZECN3LzIZyLXr4LyKpP', 'https://lh3.googleusercontent.com/d/1Ys60axoitMaXhle1rZB_sGF4diL6rpbN')" class="char-avatar" />
+    <img src="https://lh3.googleusercontent.com/d/1srmjOC1DmgHXtLBJBbbqA6JMNu8_rvOb" title="Tengen" onclick="showCharMsg('✨ Tengen Uzui', '✨ ¡Tengen proclama que la constelación de tus 11 años es la más extravagante, brillante y deslumbrante de la galaxia!', 'https://lh3.googleusercontent.com/d/1-EwkuHml7uktoqUttrH1ZAoHIlLwxwTG', 'https://lh3.googleusercontent.com/d/1srmjOC1DmgHXtLBJBbbqA6JMNu8_rvOb')" class="char-avatar" />
+    <img src="https://lh3.googleusercontent.com/d/1lwtqrqqUlClinLmrw9BlHZr1TfGBjrlu" title="Obanai" onclick="showCharMsg('🐍 Obanai Iguro', '🐍 Obanai Iguro y Kaburamaru te envían la protección y bendición más sabia del firmamento.', 'https://lh3.googleusercontent.com/d/10UL8KH62cN6FYRE50wEvfNoneKArrQnu', 'https://lh3.googleusercontent.com/d/1lwtqrqqUlClinLmrw9BlHZr1TfGBjrlu')" class="char-avatar" />
+    <img src="https://lh3.googleusercontent.com/d/1MoU8dHxxInMzkka3gr_g-Izse-lznOpl" title="Sanemi" onclick="showCharMsg('🌪️ Sanemi Shinazugawa', '🌪️ ¡Sanemi sopla un vendaval de viento cósmico para impulsarte a alcanzar todas tus metas y estrellas!', 'https://lh3.googleusercontent.com/d/1JAP1S36zurSPHYyFS4At_IzrboP4IdoL', 'https://lh3.googleusercontent.com/d/1MoU8dHxxInMzkka3gr_g-Izse-lznOpl')" class="char-avatar" />
+    <img src="https://lh3.googleusercontent.com/d/1a2G7qY8Jqp1PfScSSGPkwXjeRd02Acki" title="Gyomei" onclick="showCharMsg('🪨 Gyomei Himejima', '🪨 Gyomei junta sus manos en oración junto a las estrellas pidiendo salud, felicidad y fortaleza eterna para ti.', 'https://lh3.googleusercontent.com/d/1xUvYc8QPgCxqJcu6c4I9orxMsNwDPYd0', 'https://lh3.googleusercontent.com/d/1a2G7qY8Jqp1PfScSSGPkwXjeRd02Acki')" class="char-avatar" />
+  </div>
+
+  <!-- NAVEGACIÓN INFERIOR -->
+  <div class="bottom-nav-bar">
+    <a href="escuadron_t.html" class="px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-300 text-[11px] sm:text-xs font-bold hover:bg-slate-800 backdrop-blur-md">
+      <span class="hidden sm:inline">⬅️ Anterior: Tus Personajes ⚔️</span>
+      <span class="sm:hidden">⬅️ Personajes ⚔️</span>
+    </a>
+    <button id="soundBtn" class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-purple-900/80 border border-purple-500/40 text-purple-200 text-[11px] sm:text-xs font-bold backdrop-blur-md">
+      🎵 Música
+    </button>
+    <a href="final.html" class="px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-slate-950 text-[11px] sm:text-xs font-bold hover:scale-105 transition-all">
+      <span class="hidden sm:inline">Siguiente: Créditos 🎬 ➡️</span>
+      <span class="sm:hidden">Créditos 🎬 ➡️</span>
+    </a>
+  </div>
+
+  <!-- MODAL DE MENSAJE E IMAGEN TARJETA 3D CAMBIANTE DEL PERSONAJE (JPG -> PNG) -->
+  <div id="msgModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[200] flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-slate-900/95 border-2 border-purple-400/80 rounded-3xl p-5 sm:p-8 max-w-lg w-full max-h-[92vh] overflow-y-auto text-center shadow-2xl relative flex flex-col items-center">
+      <button onclick="closeMsgModal()" class="absolute top-3 right-4 text-purple-300 hover:text-white text-2xl font-bold transition-colors">✕</button>
+      
+      <!-- TARJETA 3D CAMBIANTE ESTILO ESCUADRÓN (JPG BASE + PNG OVERLAY POP-OUT) -->
+      <div class="relative mb-3 flex justify-center items-center w-full">
+        <div class="hashira-card-modal">
+          <img id="msgJpg" src="" alt="Fondo JPG" />
+          <img id="msgPng" src="" alt="Overlay PNG" />
+        </div>
+      </div>
+
+      <h4 id="msgTitle" class="text-xl sm:text-2xl font-extrabold text-purple-300 mb-2 font-serif"></h4>
+      <p id="msgDesc" class="text-xs sm:text-base text-slate-100 mb-5 leading-relaxed bg-slate-800/80 p-3.5 sm:p-4 rounded-2xl border border-purple-500/30 shadow-inner w-full"></p>
+      
+      <button onclick="closeMsgModal()" class="px-6 py-2.5 sm:px-8 sm:py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-amber-400 text-slate-950 font-extrabold rounded-2xl text-xs sm:text-base hover:scale-105 transition-all shadow-lg">
+        ¡Gracias por la Felicitación! ✨
+      </button>
+    </div>
+  </div>
+
+  <!-- Pantalla de carga -->
+  <div id="pageLoader" class="page-loader" role="status" aria-live="polite">
+    <div class="loader-heart" aria-hidden="true"><span></span></div>
+    <p>Cargando la Galaxia de Nayheli</p>
+    <small>Preparando las estrellas de Demon Slayer...</small>
+  </div>
+
+  <!-- Pantalla de inicio de Galaxia -->
+  <div id="startModal" aria-labelledby="intro-title">
+    <div class="sky" aria-hidden="true">
+      <span class="glow"></span>
+      <span class="stars"></span>
+      <span class="stars stars-far"></span>
+      <span class="shooting-star shooting-one"></span>
+      <span class="shooting-star shooting-two"></span>
+      <span class="love-particle p1">✦</span>
+      <span class="love-particle p2">🌸</span>
+      <span class="love-particle p3">✦</span>
+      <span class="love-particle p4">⚔️</span>
+      <span class="love-particle p5">✧</span>
+    </div>
+
+    <main class="intro">
+      <div class="intro-copy">
+        <p class="kicker"><span></span> Para Nayheli (11 Años • 27 de Septiembre) <span></span></p>
+        <h1 class="title" id="intro-title">Universo Demon Slayer</h1>
+      </div>
+
+      <div class="stage" aria-hidden="true">
+        <span class="stage-orbit orbit-one"></span>
+        <span class="stage-orbit orbit-two"></span>
+        <span class="stage-glow"></span>
+        <img src="Demon-Slayer_letra.png" alt="Demon Slayer Logo" class="bear" style="width: 140px; height: auto;">
+        <span class="stage-floor"></span>
+      </div>
+
+      <button id="startBtn" type="button" aria-label="Entrar a la Galaxia">
+        <span class="btn-copy">Explorar Galaxia 🌌</span>
+        <span class="btn-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h13"></path><path d="M13 7l5 5-5 5"></path>
+          </svg>
+        </span>
+      </button>
+    </main>
+  </div>
+
+  <!-- CANVAS THREE.JS (GALAXIA 3D) -->
+  <canvas id="galaxy-canvas"></canvas>
+
+  <div id="galaxyUI" aria-hidden="true">
+    <button id="fullscreenBtn" class="fullscreen-btn" type="button" aria-label="Pantalla completa">
+      <svg class="expand-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"></path>
+      </svg>
+      <svg class="collapse-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 3v5H3M16 3v5h5M8 21v-5H3M16 21v-5h5"></path>
+      </svg>
+    </button>
+    <div class="galaxy-hint">
+      <span class="hint-symbol" aria-hidden="true">✦</span>
+      <span class="hint-desktop">Haz clic en las imágenes .JPG que giran en 3D para ver su mensaje y versión .PNG</span>
+      <span class="hint-mobile">Toca las fotos que giran para ver el mensaje</span>
+    </div>
+  </div>
+
+  <div id="err" class="error"></div>
+  <canvas id="fx"></canvas>
+
+  <!-- CONFIGURACIÓN DE LA GALAXIA 3D DE DEMON SLAYER -->
+  <script>
+  window.DEMON_SLAYER_CHARACTERS = [
+    {
+      name: "Nezuko Kamado",
+      jpg: "https://lh3.googleusercontent.com/d/1aIuJPi9-HTD0ivEsMW1YKmkS5aR-LkXL",
+      png: "https://lh3.googleusercontent.com/d/1kKQAYTf3TaFGd7GRdAw172uBheQZne0j",
+      title: "🌸 Nezuko Kamado",
+      msg: "¡Mmmm-mmmm! 🌸 Nezuko te envía un abrazo cósmico gigante lleno de amor y dulzura por tus 11 años, Nayheli!"
+    },
+    {
+      name: "Tanjiro Kamado",
+      jpg: "https://lh3.googleusercontent.com/d/1loWgD3S2sKaOaUWAv9DNJrN9ARNwgtxz",
+      png: "https://lh3.googleusercontent.com/d/1x5o3MJa7ZfA3gLoBmF9edegAD6gi_08W",
+      title: "🌊 Tanjiro Kamado",
+      msg: "🌊 ¡Tanjiro te promete proteger tu sonrisa con toda la determinación, aliento de agua y bondad del universo!"
+    },
+    {
+      name: "Zenitsu Agatsuma",
+      jpg: "https://lh3.googleusercontent.com/d/1l0-WUevVv1TGsJKKeFsjTFiXki3YjS_e",
+      png: "https://lh3.googleusercontent.com/d/1ySzACxbZPYilH350sFEQT00nP1JHB1Vv",
+      title: "⚡ Zenitsu Agatsuma",
+      msg: "⚡ ¡AAAAH! ¡Zenitsu grita a la velocidad del rayo en todas las galaxias que Nayheli es la cumpleañera más linda de todas!"
+    },
+    {
+      name: "Inosuke Hashibira",
+      jpg: "https://lh3.googleusercontent.com/d/13ff8imkrx0b-xCHM-6Ep7jACf9GHr_bm",
+      png: "https://lh3.googleusercontent.com/d/1MwSDJsiNgRf6_lWmdDfWz7lUp5XXpqhg",
+      title: "🐗 Inosuke Hashibira",
+      msg: "🐗 ¡JAJAJA! ¡El gran Inosuke-sama declara que Nayheli es la jefa conquistadora de todo el cosmos!"
+    },
+    {
+      name: "Rengoku Kyojuro",
+      jpg: "https://lh3.googleusercontent.com/d/1FA9mZOOEJQTGQfhy-kTJEqastAs7j5Wq",
+      png: "https://lh3.googleusercontent.com/d/1loWgD3S2sKaOaUWAv9DNJrN9ARNwgtxz",
+      title: "🔥 Rengoku Kyojuro",
+      msg: "🔥 ¡UMAI! ¡Rengoku exclama: MANTÉN TU CORAZÓN ARDIENTE COMO LAS ESTRELLAS DEL UNIVERSO, NAYHELI!"
+    },
+    {
+      name: "Giyu Tomioka",
+      jpg: "https://lh3.googleusercontent.com/d/1_5XoYHl1ILK5xt9tRBBr_CFtMDBZAVk5",
+      png: "https://lh3.googleusercontent.com/d/1t7GUrVPNzC7q26IxZVYOoc2IrOu72ngR",
+      title: "🌊 Giyu Tomioka",
+      msg: "🌊 Giyu contempla la calma del espacio y te confía la serenidad de las mareas cósmicas para tus 11 años."
+    },
+    {
+      name: "Shinobu Kocho",
+      jpg: "https://lh3.googleusercontent.com/d/1d-AHwC5p8dAoxgYMIOP2Jfdnz6aY8HJi",
+      png: "https://lh3.googleusercontent.com/d/1LiJvhDtoqAoEadKc2IheUK9aEk9ytiPT",
+      title: "🦋 Shinobu Kocho",
+      msg: "🦋 Shinobu envía una constelación de mariposas brillantes para iluminar cada día de tus 11 años."
+    },
+    {
+      name: "Mitsuri Kanroji",
+      jpg: "https://lh3.googleusercontent.com/d/1c8GiqLzzjanLBz0yMOhgYZNPOgREoP3J",
+      png: "https://lh3.googleusercontent.com/d/1u8w6V3yZ6YanIh3TBg5iGNnJCbnEoc5G",
+      title: "💖 Mitsuri Kanroji",
+      msg: "💖 ¡Mitsuri se emociona hasta las lágrimas: Eres tan dulce, fuerte y radiante como todo el universo, Nayheli!"
+    },
+    {
+      name: "Muichiro Tokito",
+      jpg: "https://lh3.googleusercontent.com/d/1Ys60axoitMaXhle1rZB_sGF4diL6rpbN",
+      png: "https://lh3.googleusercontent.com/d/1bFO8SqPKQQ80lZECN3LzIZyLXr4LyKpP",
+      title: "🌫️ Muichiro Tokito",
+      msg: "🌫️ Muichiro miró a las nubes de la Vía Láctea y recordó enviarte el saludo más mágico en tu cumpleaños 11."
+    },
+    {
+      name: "Tengen Uzui",
+      jpg: "https://lh3.googleusercontent.com/d/1srmjOC1DmgHXtLBJBbbqA6JMNu8_rvOb",
+      png: "https://lh3.googleusercontent.com/d/1-EwkuHml7uktoqUttrH1ZAoHIlLwxwTG",
+      title: "✨ Tengen Uzui",
+      msg: "✨ ¡Tengen proclama que la constelación de tus 11 años es la más extravagante, brillante y deslumbrante de la galaxia!"
+    },
+    {
+      name: "Obanai Iguro",
+      jpg: "https://lh3.googleusercontent.com/d/1lwtqrqqUlClinLmrw9BlHZr1TfGBjrlu",
+      png: "https://lh3.googleusercontent.com/d/10UL8KH62cN6FYRE50wEvfNoneKArrQnu",
+      title: "🐍 Obanai Iguro",
+      msg: "🐍 Obanai Iguro y Kaburamaru te envían la protección y bendición más sabia del firmamento."
+    },
+    {
+      name: "Sanemi Shinazugawa",
+      jpg: "https://lh3.googleusercontent.com/d/1MoU8dHxxInMzkka3gr_g-Izse-lznOpl",
+      png: "https://lh3.googleusercontent.com/d/1JAP1S36zurSPHYyFS4At_IzrboP4IdoL",
+      title: "🌪️ Sanemi Shinazugawa",
+      msg: "🌪️ ¡Sanemi sopla un vendaval de viento cósmico para impulsarte a alcanzar todas tus metas y estrellas!"
+    },
+    {
+      name: "Gyomei Himejima",
+      jpg: "https://lh3.googleusercontent.com/d/1a2G7qY8Jqp1PfScSSGPkwXjeRd02Acki",
+      png: "https://lh3.googleusercontent.com/d/1xUvYc8QPgCxqJcu6c4I9orxMsNwDPYd0",
+      title: "🪨 Gyomei Himejima",
+      msg: "🪨 Gyomei junta sus manos en oración junto a las estrellas pidiendo salud, felicidad y fortaleza eterna para ti."
+    }
+  ];
+
+  window.GALAXIA_INFINITA_DATA = {
+    "phrases": [
+      "¡Feliz 11° Cumpleaños Nayheli! 🌸",
+      "🌸 Nezuko: ¡Poder de la dulzura!",
+      "🌊 Tanjiro: ¡Nunca te rindes!",
+      "⚡ Zenitsu: ¡Velocidad del rayo!",
+      "🐗 Inosuke: ¡Reina del cosmos!",
+      "🔥 Rengoku: ¡Corazón ardiente!",
+      "💖 Mitsuri: ¡Superlinda y valiente!",
+      "🦋 Shinobu: ¡Mariposas de luz!",
+      "🌊 Giyu: ¡Calma y fuerza!",
+      "🌫️ Muichiro: ¡Abrazo estelar!",
+      "✨ Tengen: ¡Fiesta extravagante!",
+      "🐍 Obanai: ¡Bendición sabia!",
+      "🌪️ Sanemi: ¡Viento de éxito!",
+      "🪨 Gyomei: ¡Fortaleza de estrella!"
+    ],
+    "ringImages": window.DEMON_SLAYER_CHARACTERS.map(c => c.jpg),
+    "title3d": "Nayheli",
+    "assetBase": ""
+  };
+
+  function showCharMsg(title, desc, pngUrl, jpgUrl) {
+    document.getElementById('msgTitle').textContent = title;
+    document.getElementById('msgDesc').textContent = desc;
+    const pngEl = document.getElementById('msgPng');
+    const jpgEl = document.getElementById('msgJpg');
+    if (pngUrl) {
+      pngEl.src = pngUrl;
+      pngEl.style.display = 'block';
+    } else {
+      pngEl.style.display = 'none';
+    }
+    if (jpgUrl) {
+      jpgEl.src = jpgUrl;
+      jpgEl.style.display = 'block';
+    } else if (pngUrl) {
+      jpgEl.src = pngUrl;
+    }
+    document.getElementById('msgModal').classList.remove('hidden');
+  }
+
+  function closeMsgModal() {
+    document.getElementById('msgModal').classList.add('hidden');
+  }
+  </script>
+  <script src="space-bg-romantic-data.js"></script>
+  <script src="app.js?v=9"></script>
+</body>
+</html>

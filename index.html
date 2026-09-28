@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Cumpleaños Nayheli! - Demon Slayer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0b0c10;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background Wallpapers Collage */
+        .bg-collage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            opacity: 0.25;
+        }
+
+        .bg-side {
+            width: 25%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 15px;
+            overflow: hidden;
+        }
+
+        .bg-side img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid #e63946;
+            box-shadow: 0 0 15px rgba(230, 57, 70, 0.4);
+            filter: grayscale(20%) brightness(0.8);
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 10;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Intro Screen / Gift Overlay */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: radial-gradient(circle, #1a0826 0%, #05020a 100%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #intro-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .gift-box-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite ease-in-out;
+            cursor: pointer;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
+        }
+
+        .intro-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            color: #ff4d6d;
+            text-shadow: 0 0 20px rgba(255, 77, 109, 0.8);
+            margin-bottom: 15px;
+        }
+
+        .intro-subtitle {
+            font-size: 1.2rem;
+            color: #e0e0e0;
+            margin-bottom: 30px;
+        }
+
+        .btn-surprise {
+            background: linear-gradient(135deg, #ff4d6d, #c77dff);
+            color: #ffffff;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(255, 77, 109, 0.6);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-surprise:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 40px rgba(199, 125, 255, 0.9);
+        }
+
+        /* Header */
+        .logo-img {
+            max-width: 350px;
+            width: 90%;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 15px rgba(230, 57, 70, 0.8));
+        }
+
+        .header-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.8rem, 6vw, 3rem);
+            text-align: center;
+            background: linear-gradient(90deg, #ff4d6d, #ffb703, #ff4d6d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(255, 77, 109, 0.5);
+        }
+
+        .badge-age {
+            background: rgba(230, 57, 70, 0.2);
+            border: 2px solid #ff4d6d;
+            color: #ffb703;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: clamp(0.95rem, 3.5vw, 1.3rem);
+            font-weight: 700;
+            margin-bottom: 30px;
+            box-shadow: 0 0 15px rgba(230, 57, 70, 0.4);
+            text-align: center;
+            max-width: 90vw;
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(270px, 100%), 1fr));
+            gap: clamp(15px, 3vw, 25px);
+            width: 100%;
+            max-width: 950px;
+        }
+
+        .menu-card {
+            background: rgba(20, 20, 35, 0.85);
+            border: 2px solid #2a2a45;
+            border-radius: 20px;
+            padding: clamp(20px, 4vw, 30px) clamp(16px, 3vw, 20px);
+            text-align: center;
+            text-decoration: none;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .menu-card:hover::before {
+            left: 100%;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: #ff4d6d;
+            box-shadow: 0 15px 35px rgba(230, 57, 70, 0.4);
+        }
+
+        .card-icon {
+            font-size: clamp(2.2rem, 5vw, 3rem);
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+            color: #ffb703;
+            margin-bottom: 8px;
+        }
+
+        .card-desc {
+            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+            color: #aaaaaa;
+            line-height: 1.4;
+        }
+
+        /* Audio Controls Bar */
+        .audio-bar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(15, 15, 25, 0.92);
+            border: 1px solid #ff4d6d;
+            padding: 8px 16px;
+            border-radius: 30px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            max-width: calc(100vw - 30px);
+        }
+
+        .audio-btn {
+            background: #ff4d6d;
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .audio-info {
+            font-size: 0.8rem;
+            color: #dddddd;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        @media (max-width: 900px) {
+            .bg-side { display: none; }
+        }
+        @media (max-width: 480px) {
+            .main-container { padding: 25px 14px; }
+            .btn-surprise { padding: 14px 28px; font-size: 1.1rem; letter-spacing: 1px; width: 100%; max-width: 300px; }
+            .intro-title { font-size: 1.6rem; }
+            .intro-subtitle { font-size: 0.95rem; }
+            .gift-box-icon { font-size: 64px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Wallpapers collage laterales -->
+    <div class="bg-collage">
+        <div class="bg-side">
+            <img src="https://lh3.googleusercontent.com/d/1loWgD3S2sKaOaUWAv9DNJrN9ARNwgtxz" alt="Tanjiro">
+            <img src="https://lh3.googleusercontent.com/d/1aIuJPi9-HTD0ivEsMW1YKmkS5aR-LkXL" alt="Nezuko">
+            <img src="https://lh3.googleusercontent.com/d/1l0-WUevVv1TGsJKKeFsjTFiXki3YjS_e" alt="Zenitsu">
+            <img src="https://lh3.googleusercontent.com/d/13ff8imkrx0b-xCHM-6Ep7jACf9GHr_bm" alt="Inosuke">
+        </div>
+        <div class="bg-side">
+            <img src="https://lh3.googleusercontent.com/d/1FA9mZOOEJQTGQfhy-kTJEqastAs7j5Wq" alt="Rengoku">
+            <img src="https://lh3.googleusercontent.com/d/1_5XoYHl1ILK5xt9tRBBr_CFtMDBZAVk5" alt="Giyu">
+            <img src="https://lh3.googleusercontent.com/d/1d-AHwC5p8dAoxgYMIOP2Jfdnz6aY8HJi" alt="Shinobu">
+            <img src="https://lh3.googleusercontent.com/d/1c8GiqLzzjanLBz0yMOhgYZNPOgREoP3J" alt="Mitsuri">
+        </div>
+    </div>
+
+    <!-- Pantalla Inicial de Sorpresa -->
+    <div id="intro-overlay">
+        <div class="gift-box-icon" onclick="abrirSorpresa()">🎁</div>
+        <h1 class="intro-title">¡Tengo una sorpresa para ti, Nayheli!</h1>
+        <p class="intro-subtitle">Haz clic abajo para abrir tu regalo especial de Demon Slayer</p>
+        <button class="btn-surprise" onclick="abrirSorpresa()">✨ ABRIR SORPRESA ✨</button>
+    </div>
+
+    <!-- Contenido Principal / Menú -->
+    <div class="main-container">
+        <img src="Demon-Slayer_letra.png" alt="Demon Slayer Logo" class="logo-img">
+        <h1 class="header-title">¡Feliz Cumpleaños Nayheli!</h1>
+        <div class="badge-age">🎉 11 Años • 27 de Septiembre 🎉</div>
+
+        <div class="menu-grid">
+            <!-- 1. Tu Opening Favorito -->
+            <a href="video_inicio.html" class="menu-card">
+                <div class="card-icon">🎬</div>
+                <h2 class="card-title">Tu Opening Favorito</h2>
+                <p class="card-desc">Mira el video especial de apertura preparado para ti.</p>
+            </a>
+
+            <!-- 2. Torta -->
+            <a href="torta_nezuko_s.html" class="menu-card">
+                <div class="card-icon">🎂</div>
+                <h2 class="card-title">Torta</h2>
+                <p class="card-desc">Sopla tus 11 velas interactivas y descubre las sorpresas y videos de Nezuko.</p>
+            </a>
+
+            <!-- 3. Tiempo de Vida -->
+            <a href="tiempo_vida.html" class="menu-card">
+                <div class="card-icon">⏳</div>
+                <h2 class="card-title">Tiempo de Vida</h2>
+                <p class="card-desc">Mira tu vida contada en años, meses, días, horas, minutos y segundos en vivo.</p>
+            </a>
+
+            <!-- 4. Tus Personajes -->
+            <a href="escuadron_t.html" class="menu-card">
+                <div class="card-icon">⚔️</div>
+                <h2 class="card-title">Tus Personajes</h2>
+                <p class="card-desc">Conoce a Tanjiro, Zenitsu e Inosuke en 3D y mira el video especial de Tanjiro.</p>
+            </a>
+
+            <!-- 5. Universo Demon Slayer -->
+            <a href="galaxia.html" class="menu-card">
+                <div class="card-icon">🌌</div>
+                <h2 class="card-title">Universo Demon Slayer</h2>
+                <p class="card-desc">Explora la galaxia 3D con todos tus personajes favoritos y sus felicitaciones.</p>
+            </a>
+
+            <!-- 6. Créditos -->
+            <a href="final.html" class="menu-card">
+                <div class="card-icon">📜</div>
+                <h2 class="card-title">Créditos</h2>
+                <p class="card-desc">Una despedida especial estilo créditos de película con música final.</p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Reproductor de Audio Principal -->
+    <audio id="bg-audio" src="cancion_principal.mp3" loop></audio>
+    <div class="audio-bar" id="audio-bar" style="display: none;">
+        <button class="audio-btn" id="music-toggle" onclick="toggleMusic()">🔊</button>
+        <div class="audio-info">🎵 Canción Principal</div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('bg-audio');
+        const audioBar = document.getElementById('audio-bar');
+        const musicToggle = document.getElementById('music-toggle');
+        const introOverlay = document.getElementById('intro-overlay');
+
+        function abrirSorpresa() {
+            introOverlay.classList.add('hidden');
+            audioBar.style.display = 'flex';
+            audio.play().then(() => {
+                musicToggle.textContent = '🔊';
+            }).catch(err => {
+                console.log("Audio autoplay error:", err);
+            });
+        }
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                musicToggle.textContent = '🔊';
+            } else {
+                audio.pause();
+                musicToggle.textContent = '🔇';
+            }
+        }
+    </script>
+</body>
+</html>
